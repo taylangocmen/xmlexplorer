@@ -1,0 +1,23 @@
+{
+  "name": "xmlexplorer",
+  "version": "1.0.0",
+  "description": "An xml parser for exploring very large xml files",
+  "main": "parser.js",
+  "dependencies": {
+    "xml-stream": "^0.4.5"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "parse"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/taylangocmen/xmlexplorer.git"
+  },
+  "author": "taylangocmen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/taylangocmen/xmlexplorer/issues"
+  },
+  "homepage": "https://github.com/taylangocmen/xmlexplorer#readme"
+}
