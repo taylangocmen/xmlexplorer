@@ -7,13 +7,9 @@
 var cheerio = require('cheerio');
 var fs = require('fs');
 var replaceAll = require("./functions");
-// var prompt = require('prompt');
 
 function exist_char_in_str(aChar, aStr) {
-    if (aStr.indexOf(aChar) === -1)
-        return false;
-    else
-        return true;
+    return (!(aStr.indexOf(aChar) === -1));
 }
 
 function parse_keyword($, keyword) {
@@ -182,7 +178,7 @@ function parse_keyword($, keyword) {
         .each(set_seven_chr_def);
 
     return everything;
-};
+}
 
 function parse_everything() {
     var $ = cheerio.load(fs.readFileSync('Tabular.xml'), {
@@ -224,20 +220,15 @@ function parse_everything() {
                 everything[p.one][p.two][p.thr][p.fou][p.fiv] = diagnoses[aKey];
 
         }
-    };
+    }
 
     return everything;
-};
-
-function onErr(err) {
-    console.log(err);
-    return 1;
 }
 
 // Thanks to ..
 // a SYNCHRONOUS & BLOCKING readline prompt solution that's not a huge node package
 // https://github.com/Jeff-Russ/node-readline-sync
-var readln = function () {
+var read_line = function () {
     return require('child_process')
         .execSync('read reply </dev/tty; echo "$reply"',{stdio:'pipe'})
         .toString().replace(/\n$/, '');
@@ -247,13 +238,12 @@ function do_interface(){
     console.log('Wait for ICD10...');
     var parsed_data = parse_everything();
     console.log('...built ICD10.');
-    // console.log(parsed_data.A['37']['1']['1']);
 
     let aPath = '';
     do {
 
         console.log('A program ask for aPath: ');
-        aPath = readln();
+        aPath = read_line();
         if(aPath != 'quit' && aPath != '') {
 
             console.log('aPath was:', aPath);
@@ -279,42 +269,38 @@ function do_interface(){
                             result = result[aPath.slice(10, 13)];
                 }
             } else {
-                console.log(aPath.slice(0,1), aPath.slice(2,4), aPath.slice(5,6), aPath.slice(7,8), aPath.slice(9,10), aPath.slice(11,14));
 
                 result = parsed_data[aPath.slice(0,1)]; // A
                 if(result != {})
                     if(aPath.slice(2,4) != ''){
-                        result = result[aPath.slice(2,4)]; // 00
+                        result = result[aPath.slice(2,4)]; // A.00
 
                         if(result != {})
                             if(aPath.slice(5,6) != '') {
                                 if(exist_char_in_str('.', aPath.slice(5, 8)) || (aPath.slice(5).length === 1)){
-                                    result = result[aPath.slice(5, 6)]; // 1
+                                    result = result[aPath.slice(5, 6)]; // A.00.1
 
                                     if (result != {})
                                         if (aPath.slice(7, 8) != '') {
                                             if (exist_char_in_str('.', aPath.slice(7, 10)) || (aPath.slice(7).length === 1)) {
-                                                result = result[aPath.slice(7, 8)]; // 1
+                                                result = result[aPath.slice(7, 8)]; // A.00.1.1
 
                                                 if (result != {})
                                                     if (aPath.slice(9, 10) != '') {
                                                         if (exist_char_in_str('.', aPath.slice(9, 12)) || (aPath.slice(9).length === 1)) {
-                                                            result = result[aPath.slice(9, 10)]; // 1
+                                                            result = result[aPath.slice(9, 10)]; // A.00.1.1.1
 
                                                             if (result != {})
                                                                 if (aPath.slice(11, 14) != '')
-                                                                    result = result[aPath.slice(11, 14)]; // dsc
-                                                        } else {
-                                                            result = result[aPath.slice(9, 12)];
-                                                        }
+                                                                    result = result[aPath.slice(11, 14)]; // A.00.1.1.1.dsc
+                                                        } else
+                                                            result = result[aPath.slice(9, 12)]; // A.00.1.1.dsc
                                                     }
-                                            } else {
-                                                result = result[aPath.slice(7, 10)];
-                                            }
+                                            } else
+                                                result = result[aPath.slice(7, 10)]; // A.00.1.dsc
                                         }
-                                } else {
-                                    result = result[aPath.slice(5,8)];
-                                }
+                                } else
+                                    result = result[aPath.slice(5,8)]; // A.00.dsc
                             }
                         }
                     }
@@ -324,6 +310,6 @@ function do_interface(){
     } while (aPath != 'quit');
 
     console.log('Done, exiting.');
-};
+}
 
 do_interface();

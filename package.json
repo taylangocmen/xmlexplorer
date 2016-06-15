@@ -2,7 +2,7 @@
   "name": "xmlexplorer",
   "version": "1.0.0",
   "description": "An xml parser for exploring very large xml files",
-  "main": "parser.js",
+  "main": "tabular.js",
   "dependencies": {
     "cheerio": "^0.19.0"
   },
