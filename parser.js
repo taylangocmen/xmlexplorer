@@ -2,11 +2,19 @@
  * Created by taylangocmen on 6/10/16.
  */
 
-'use strict';
+// 'use strict';
 
 var cheerio = require('cheerio');
 var fs = require('fs');
 var replaceAll = require("./functions");
+// var prompt = require('prompt');
+
+function exist_char_in_str(aChar, aStr) {
+    if (aStr.indexOf(aChar) === -1)
+        return false;
+    else
+        return true;
+}
 
 function parse_keyword($, keyword) {
 
@@ -25,7 +33,7 @@ function parse_keyword($, keyword) {
                 ($(element).children('name').text().trim()));
         let text = $(element).children('desc').text().trim();
 
-        if(text != '') everything[modifiedIndex]['desc']
+        if(text != '') everything[modifiedIndex]['dsc']
             = text;
     };
 
@@ -73,7 +81,7 @@ function parse_keyword($, keyword) {
                 ($(element).children('name').text().trim()));
         let text = $(element).children('notes').text().trim();
 
-        if(text != '') everything[modifiedIndex]['notes']
+        if(text != '') everything[modifiedIndex]['nts']
             = ('- ' + text.replaceAll("\r\n      ", "\r- "));
     };
 
@@ -83,7 +91,7 @@ function parse_keyword($, keyword) {
                 ($(element).children('name').text().trim()));
         let text = $(element).children('codeFirst').text().trim();
 
-        if(text != '') everything[modifiedIndex]['cFirst']
+        if(text != '') everything[modifiedIndex]['cft']
             = ('- ' + text.replaceAll("\r\n      ", "\r- "));
     };
 
@@ -93,7 +101,7 @@ function parse_keyword($, keyword) {
                 ($(element).children('name').text().trim()));
         let text = $(element).children('codeAlso').text().trim();
 
-        if(text != '') everything[modifiedIndex]['cAlso']
+        if(text != '') everything[modifiedIndex]['cal']
             = ('- ' + text.replaceAll("\r\n      ", "\r- "));
     };
 
@@ -103,7 +111,7 @@ function parse_keyword($, keyword) {
                 ($(element).children('name').text().trim()));
         let text = $(element).children('inclusionTerm').text().trim();
 
-        if(text != '') everything[modifiedIndex]['incTerm']
+        if(text != '') everything[modifiedIndex]['ict']
             = ('- ' + text.replaceAll("\r\n      ", "\r- "));
     };
 
@@ -119,7 +127,7 @@ function parse_keyword($, keyword) {
                     .replaceAll("\r\n      ", ""));
             });
         var text = sections.join('\r- ');
-        if(text != '') everything[modifiedIndex]['secs'] = ('- ' + text);
+        if(text != '') everything[modifiedIndex]['scr'] = ('- ' + text);
     };
 
     var set_seven_chr_note = (index, element) => {
@@ -128,7 +136,7 @@ function parse_keyword($, keyword) {
                 ($(element).children('name').text().trim()));
         let text = $(element).children('sevenChrNote').text().trim();
 
-        if(text != '') everything[modifiedIndex]['scn']
+        if(text != '') everything[modifiedIndex]['7cn']
             = ('- ' + text.replaceAll("\r\n      ", "\r- "));
     };
 
@@ -150,7 +158,7 @@ function parse_keyword($, keyword) {
         );
         if(text != '') {
             text = text.slice(0, -2);
-            everything[modifiedIndex]['scd']
+            everything[modifiedIndex]['7cd']
                 = ('- ' + text.replaceAll("\r\n      ", "\r- "));
         };
     };
@@ -197,30 +205,125 @@ function parse_everything() {
                 fou: aKey.slice(5, 6),
                 fiv: aKey.slice(6, 7)};
 
-            if(p.one!='' && (!everything.hasOwnProperty(p.one))) {
+            if(p.one!=''&&(!everything.hasOwnProperty(p.one)))
                 everything[p.one] = {};
-            }
-            if(p.two!='' && (!everything[p.one].hasOwnProperty(p.two))) {
+            if(p.two!=''&&(!everything[p.one].hasOwnProperty(p.two)))
                 everything[p.one][p.two] = {};
-            }
-            if(p.thr!='' && (!everything[p.one][p.two].hasOwnProperty(p.thr))) {
+            if(p.thr!=''&&(!everything[p.one][p.two].hasOwnProperty(p.thr)))
                 everything[p.one][p.two][p.thr] = {};
-            }
-            if(p.fou!='' && (!everything[p.one][p.two][p.thr].hasOwnProperty(p.fou))) {
+            if(p.fou!=''&&(!everything[p.one][p.two][p.thr].hasOwnProperty(p.fou)))
                 everything[p.one][p.two][p.thr][p.fou] = {};
-            }
-            if (aKey.length === 3)  everything[p.one][p.two] = diagnoses[aKey];
-            if (aKey.length === 5)  everything[p.one][p.two][p.thr] = diagnoses[aKey];
-            if (aKey.length === 6)  everything[p.one][p.two][p.thr][p.fou] = diagnoses[aKey];
-            if (aKey.length === 7)  everything[p.one][p.two][p.thr][p.fou][p.fiv] = diagnoses[aKey];
+
+            if (aKey.length === 3)
+                everything[p.one][p.two] = diagnoses[aKey];
+            if (aKey.length === 5)
+                everything[p.one][p.two][p.thr] = diagnoses[aKey];
+            if (aKey.length === 6)
+                everything[p.one][p.two][p.thr][p.fou] = diagnoses[aKey];
+            if (aKey.length === 7)
+                everything[p.one][p.two][p.thr][p.fou][p.fiv] = diagnoses[aKey];
 
         }
     };
 
     return everything;
-
 };
 
-// parse_everything();
+function onErr(err) {
+    console.log(err);
+    return 1;
+}
 
-// console.log(parse_everything().A['00']['0']);
+// Thanks to ..
+// a SYNCHRONOUS & BLOCKING readline prompt solution that's not a huge node package
+// https://github.com/Jeff-Russ/node-readline-sync
+var readln = function () {
+    return require('child_process')
+        .execSync('read reply </dev/tty; echo "$reply"',{stdio:'pipe'})
+        .toString().replace(/\n$/, '');
+};
+
+function do_interface(){
+    console.log('Wait for ICD10...');
+    var parsed_data = parse_everything();
+    console.log('...built ICD10.');
+    // console.log(parsed_data.A['37']['1']['1']);
+
+    let aPath = '';
+    do {
+
+        console.log('A program ask for aPath: ');
+        aPath = readln();
+        if(aPath != 'quit' && aPath != '') {
+
+            console.log('aPath was:', aPath);
+
+            var result = {};
+
+            if(aPath.slice(0,7) === 'chapter'){
+                console.log(aPath.slice(0,7), aPath.slice(8,15), aPath.slice(16,19));
+                result = parsed_data[aPath.slice(0,7)];
+                if(aPath.slice(8,14) != ''){
+                    result = result[aPath.slice(8,15)];
+                    if(result != {})
+                        if(aPath.slice(16,19) != '')
+                            result = result[aPath.slice(16,19)];
+                }
+            } else if (aPath.slice(0,7) === 'section') {
+                console.log(aPath.slice(0,7), aPath.slice(8,9), aPath.slice(10,13));
+                result = parsed_data[aPath.slice(0, 7)];
+                if (aPath.slice(8, 9) != '') {
+                    result = result[aPath.slice(8, 9)];
+                    if (result != {})
+                        if (aPath.slice(10, 13) != '')
+                            result = result[aPath.slice(10, 13)];
+                }
+            } else {
+                console.log(aPath.slice(0,1), aPath.slice(2,4), aPath.slice(5,6), aPath.slice(7,8), aPath.slice(9,10), aPath.slice(11,14));
+
+                result = parsed_data[aPath.slice(0,1)]; // A
+                if(result != {})
+                    if(aPath.slice(2,4) != ''){
+                        result = result[aPath.slice(2,4)]; // 00
+
+                        if(result != {})
+                            if(aPath.slice(5,6) != '') {
+                                if(exist_char_in_str('.', aPath.slice(5, 8)) || (aPath.slice(5).length === 1)){
+                                    result = result[aPath.slice(5, 6)]; // 1
+
+                                    if (result != {})
+                                        if (aPath.slice(7, 8) != '') {
+                                            if (exist_char_in_str('.', aPath.slice(7, 10)) || (aPath.slice(7).length === 1)) {
+                                                result = result[aPath.slice(7, 8)]; // 1
+
+                                                if (result != {})
+                                                    if (aPath.slice(9, 10) != '') {
+                                                        if (exist_char_in_str('.', aPath.slice(9, 12)) || (aPath.slice(9).length === 1)) {
+                                                            result = result[aPath.slice(9, 10)]; // 1
+
+                                                            if (result != {})
+                                                                if (aPath.slice(11, 14) != '')
+                                                                    result = result[aPath.slice(11, 14)]; // dsc
+                                                        } else {
+                                                            result = result[aPath.slice(9, 12)];
+                                                        }
+                                                    }
+                                            } else {
+                                                result = result[aPath.slice(7, 10)];
+                                            }
+                                        }
+                                } else {
+                                    result = result[aPath.slice(5,8)];
+                                }
+                            }
+                        }
+                    }
+
+            console.log('Result:', result);
+        }
+    } while (aPath != 'quit');
+
+    console.log('Done, exiting.');
+};
+
+do_interface();
