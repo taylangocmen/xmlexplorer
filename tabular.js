@@ -260,7 +260,7 @@ function do_interface(){
     var yorn = read_line();
 
     if(yorn === 'y') {
-        write_obj_to_JSON(parse_everything(), 'parseded_everything');
+        write_obj_to_JSON(parse_everything(), 'parsed_everything');
     }
     var parsed_data = JSON.parse(fs.readFileSync('./JSONs/parsed_everything.json', 'utf8'));
 
