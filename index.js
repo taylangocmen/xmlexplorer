@@ -57,7 +57,6 @@ var index_term = (index, element) => {
 
         let aKey = convert_key(e.tagName);
         if(aKey != undefined && aKey != 'title') {
-            mainterm[aKey] = {};
             if (aKey != 'term') {
                 mainterm[aKey] = $(e).text().trim();
             } else {
@@ -123,12 +122,10 @@ function do_interface(){
     console.log('Parse Index.xml again? : y(es)/n(o)');
     var yorn = read_line();
 
-    var indexed_data = {};
-    if(yorn === 'y') {
-        indexed_data = index_everything();
-        write_obj_to_JSON(indexed_data, 'indexed_everything');
-    } else
-        indexed_data = JSON.parse(fs.readFileSync('./JSONs/indexed_everything.json', 'utf8'));
+    if(yorn === 'y')
+        write_obj_to_JSON(index_everything(), 'indexed_everything');
+
+    var indexed_data = JSON.parse(fs.readFileSync('./JSONs/indexed_everything.json', 'utf8'));
 
     // let aPath = '';
     do {

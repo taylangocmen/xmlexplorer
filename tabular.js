@@ -38,14 +38,14 @@ function parse_keyword($, keyword) {
     var everything = {};
 
     var initialize_elements = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                     ($(element).children('name').text().trim()));
         everything[modifiedIndex] = {};
     };
 
     var set_names = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('desc').text().trim();
@@ -55,7 +55,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_inclusions = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('includes').text().trim();
@@ -65,7 +65,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_exclusions = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text1 = $(element).children('excludes1').text().trim();
@@ -83,7 +83,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_use_additional_codes = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('useAdditionalCode').text().trim();
@@ -93,7 +93,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_notes = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('notes').text().trim();
@@ -103,7 +103,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_code_firsts = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('codeFirst').text().trim();
@@ -113,7 +113,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_code_alsos = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('codeAlso').text().trim();
@@ -123,7 +123,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_inclusion_terms = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('inclusionTerm').text().trim();
@@ -133,7 +133,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_section_indices = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         var sections = [];
@@ -148,7 +148,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_seven_chr_note = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         let text = $(element).children('sevenChrNote').text().trim();
@@ -158,7 +158,7 @@ function parse_keyword($, keyword) {
     };
 
     var set_seven_chr_def = (index, element) => {
-        var modifiedIndex = (element.tagName === 'chapter') ? (index + '') :
+        var modifiedIndex = (element.tagName === 'chapter') ? ((index+1) + '') :
             ((element.tagName === 'section') ? (element.attribs.id) :
                 ($(element).children('name').text().trim()));
         var text = '';
@@ -259,12 +259,10 @@ function do_interface(){
     console.log('Parse Tabular.xml again? : y(es)/n(o)');
     var yorn = read_line();
 
-    var parsed_data = {};
     if(yorn === 'y') {
-        parsed_data = parse_everything();
-        write_obj_to_JSON(parsed_data, 'parseded_everything');
-    } else 
-        parsed_data = JSON.parse(fs.readFileSync('./JSONs/parsed_everything.json', 'utf8'));
+        write_obj_to_JSON(parse_everything(), 'parseded_everything');
+    }
+    var parsed_data = JSON.parse(fs.readFileSync('./JSONs/parsed_everything.json', 'utf8'));
 
     do {
         console.log('Type a path: ');
