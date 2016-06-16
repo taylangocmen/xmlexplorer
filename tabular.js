@@ -12,6 +12,27 @@ function exist_char_in_str(aChar, aStr) {
     return (!(aStr.indexOf(aChar) === -1));
 }
 
+var write_obj_to_JSON = (anObj, aFileName) => {
+
+    var aPath = './JSONs/' + aFileName;
+
+    if(aPath.slice(-4) != '.json') aPath = aPath + ".json";
+
+    // ASYNC MODE
+    // fs.writeFile(aPath, JSON.stringify(anObj, null, 4), (err) => {
+    //
+    //     if(err) {
+    //         throw new Error('@*Wrong input for write_obj_to_JSON!*@  ====>  ┻━┻ ヘ╰( •̀ε•́ ╰) ====> '+ anObj, aFileName);
+    //     } else {
+    //         console.log("Your object has been converted to JSON and saved to " + aPath);
+    //     }
+    // });
+
+    // SYNC MODE
+    fs.writeFileSync(aPath, JSON.stringify(anObj, null, 4), 'utf8');
+
+};
+
 function parse_keyword($, keyword) {
 
     var everything = {};
@@ -235,22 +256,26 @@ var read_line = function () {
 };
 
 function do_interface(){
-    console.log('Wait for ICD10...');
-    var parsed_data = parse_everything();
-    console.log('...built ICD10.');
+    console.log('Parse Tabular.xml again? : y(es)/n(o)');
+    var yorn = read_line();
 
-    let aPath = '';
+    var parsed_data = {};
+    if(yorn === 'y') {
+        parsed_data = parse_everything();
+        write_obj_to_JSON(parsed_data, 'parseded_everything');
+    } else 
+        parsed_data = JSON.parse(fs.readFileSync('./JSONs/parsed_everything.json', 'utf8'));
+
     do {
-
-        console.log('A program ask for aPath: ');
-        aPath = read_line();
+        console.log('Type a path: ');
+        var aPath = read_line();
         if(aPath != 'quit' && aPath != '') {
 
-            console.log('aPath was:', aPath);
+            // console.log('aPath was:', aPath);
 
             var result = {};
 
-            if(aPath.slice(0,7) === 'chapter'){
+            if(aPath.slice(0,7) === 'section'){
                 console.log(aPath.slice(0,7), aPath.slice(8,15), aPath.slice(16,19));
                 result = parsed_data[aPath.slice(0,7)];
                 if(aPath.slice(8,14) != ''){
@@ -259,7 +284,7 @@ function do_interface(){
                         if(aPath.slice(16,19) != '')
                             result = result[aPath.slice(16,19)];
                 }
-            } else if (aPath.slice(0,7) === 'section') {
+            } else if (aPath.slice(0,7) === 'chapter') {
                 console.log(aPath.slice(0,7), aPath.slice(8,9), aPath.slice(10,13));
                 result = parsed_data[aPath.slice(0, 7)];
                 if (aPath.slice(8, 9) != '') {
@@ -269,7 +294,6 @@ function do_interface(){
                             result = result[aPath.slice(10, 13)];
                 }
             } else {
-
                 result = parsed_data[aPath.slice(0,1)]; // A
                 if(result != {})
                     if(aPath.slice(2,4) != ''){
@@ -313,3 +337,4 @@ function do_interface(){
 }
 
 do_interface();
+// write_obj_to_JSON(parse_everything(), 'parsed_everything');
