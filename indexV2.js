@@ -55,28 +55,8 @@ var construct_indexV2 = (anObj) => {
                             for (var diagnosis in anObj[a1key][a2key][a3key]) {
                                 if (anObj[a1key][a2key][a3key].hasOwnProperty(diagnosis)) {
 
-                                    // console.log(diagnosis);
                                     indexV2.push(adjust_diagnosis(diagnosis, anObj[a1key][a2key][a3key][diagnosis]));
-
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    // console.log(indexV2[614]
-    //     .subdiagnoses[17] // level1
-    //     .subdiagnoses[0] // level2
-    //     .subdiagnoses[2] // level3
-    //     .subdiagnoses[0] // level4
-    //     .subdiagnoses[0] // level5
-    //     .subdiagnoses[0] // level6
-    //     .subdiagnoses[1] // level7
-    //     .subdiagnoses[1] // level8
-    //     .subdiagnoses[1]); // level9
+                                }}}}}}}}
 
     return indexV2;
 };
@@ -97,31 +77,9 @@ function do_interface(){
     if(yorn === 'y')
         write_obj_to_JSON(construct_indexV2(indexed_data), 'indexed_everythingV2');
 
-    var indexV2_data = JSON.parse(fs.readFileSync('./JSONs/indexed_everythingV2.json', 'utf8'));
+    var indexed_dataV2 = JSON.parse(fs.readFileSync('./JSONs/indexed_everythingV2.json', 'utf8'));
 
-    do {
-        var input = read_line();
-        console.log(indexV2_data[614]
-            .subdiagnoses[17] // level1
-            .subdiagnoses[0] // level2
-            .subdiagnoses[2] // level3
-            .subdiagnoses[0] // level4
-            .subdiagnoses[0] // level5
-            .subdiagnoses[0] // level6
-            .subdiagnoses[1] // level7
-            .subdiagnoses[1] // level8
-            .subdiagnoses[1]); // level9
-
-
-    } while (input != 'quit');
-
-    console.log('Done, exiting.');
+    console.log(indexed_dataV2);
 }
 
 do_interface();
-
-// write_obj_to_JSON(
-//     construct_indexV2(
-//         JSON.parse(
-//             fs.readFileSync('./JSONs/indexed_everything.json', 'utf8'))),
-//     'indexed_everythingV2');
