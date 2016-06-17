@@ -13,24 +13,9 @@ function exist_char_in_str(aChar, aStr) {
 }
 
 var write_obj_to_JSON = (anObj, aFileName) => {
-
     var aPath = './JSONs/' + aFileName;
-
     if(aPath.slice(-4) != '.json') aPath = aPath + ".json";
-
-    // ASYNC MODE
-    // fs.writeFile(aPath, JSON.stringify(anObj, null, 4), (err) => {
-    //
-    //     if(err) {
-    //         throw new Error('@*Wrong input for write_obj_to_JSON!*@  ====>  ┻━┻ ヘ╰( •̀ε•́ ╰) ====> '+ anObj, aFileName);
-    //     } else {
-    //         console.log("Your object has been converted to JSON and saved to " + aPath);
-    //     }
-    // });
-
-    // SYNC MODE
     fs.writeFileSync(aPath, JSON.stringify(anObj, null, 4), 'utf8');
-
 };
 
 function parse_keyword($, keyword) {
@@ -246,9 +231,7 @@ function parse_everything() {
     return everything;
 }
 
-// Thanks to ..
-// a SYNCHRONOUS & BLOCKING readline prompt solution that's not a huge node package
-// https://github.com/Jeff-Russ/node-readline-sync
+// Thanks to ..ub.com/Jeff-Russ/node-readline-sync
 var read_line = function () {
     return require('child_process')
         .execSync('read reply </dev/tty; echo "$reply"',{stdio:'pipe'})

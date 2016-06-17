@@ -6,26 +6,12 @@
 
 var cheerio = require('cheerio');
 var fs = require('fs');
+var replaceAll = require("./functions");
 
 var write_obj_to_JSON = (anObj, aFileName) => {
-
     var aPath = './JSONs/' + aFileName;
-
     if(aPath.slice(-4) != '.json') aPath = aPath + ".json";
-
-    // ASYNC MODE
-    // fs.writeFile(aPath, JSON.stringify(anObj, null, 4), (err) => {
-    //
-    //     if(err) {
-    //         throw new Error('@*Wrong input for write_obj_to_JSON!*@  ====>  ┻━┻ ヘ╰( •̀ε•́ ╰) ====> '+ anObj, aFileName);
-    //     } else {
-    //         console.log("Your object has been converted to JSON and saved to " + aPath);
-    //     }
-    // });
-
-    // SYNC MODE
     fs.writeFileSync(aPath, JSON.stringify(anObj, null, 4), 'utf8');
-
 };
 
 var $ = cheerio.load(fs.readFileSync('Index.xml'), {
@@ -38,7 +24,7 @@ var apprKeys ={
     code: 'code',
     term: 'term',
     see: 'see',
-    seeAlso: 'seealso',
+    seeAlso: 'seeAlso',
     manif: 'manif',
     seecat: 'seecat',
     subcat: 'subcat'
@@ -79,7 +65,7 @@ var index_letter = (index, element) => {
 
     $(mainTerms)
         .each((i,e) => {
-            let mtTitle = $(e).children('title').text();
+            let mtTitle = $(e).children('title').text().replaceAll('(', ' (').replaceAll('  (', ' (');
 
             if(letter[cap_first(mtTitle.slice(1,2))] === undefined)
                 letter[cap_first(mtTitle.slice(1,2))] = {};
@@ -108,9 +94,6 @@ function index_everything() {
     return (everything);
 }
 
-// Thanks to ..
-// a SYNCHRONOUS & BLOCKING readline prompt solution that's not a huge node package
-// https://github.com/Jeff-Russ/node-readline-sync
 var read_line = function () {
     return require('child_process')
         .execSync('read reply </dev/tty; echo "$reply"',{stdio:'pipe'})
