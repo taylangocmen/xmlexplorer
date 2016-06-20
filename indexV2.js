@@ -23,7 +23,7 @@ var adjust_diagnosis = (diagnosis, diagObj) => {
         manif: '',
         seecat: '',
         subcat: '',
-        subdiagnoses: []
+        children: []
     };
 
     for (var aKey in diagObj) {
@@ -32,7 +32,7 @@ var adjust_diagnosis = (diagnosis, diagObj) => {
             if (diagObjV2.hasOwnProperty(aKey)) {
                 diagObjV2[aKey] = diagObj[aKey];
             } else {
-                diagObjV2.subdiagnoses.push(adjust_diagnosis(aKey, diagObj[aKey]));
+                diagObjV2.children.push(adjust_diagnosis(aKey, diagObj[aKey]));
             }
         }
     }
@@ -75,9 +75,9 @@ function do_interface(){
     var yorn = read_line();
 
     if(yorn === 'y')
-        write_obj_to_JSON(construct_indexV2(indexed_data), 'indexed_everythingV2');
+        write_obj_to_JSON(construct_indexV2(indexed_data), 'indexed_diagnoses');
 
-    var indexed_dataV2 = JSON.parse(fs.readFileSync('./JSONs/indexed_everythingV2.json', 'utf8'));
+    var indexed_dataV2 = JSON.parse(fs.readFileSync('./JSONs/indexed_diagnoses.json', 'utf8'));
 
     console.log(indexed_dataV2);
 }
