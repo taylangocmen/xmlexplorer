@@ -121,4 +121,3 @@ function do_interface(){
 }
 
 do_interface();
-// write_obj_to_JSON(index_everything(), 'indexed_everything');
